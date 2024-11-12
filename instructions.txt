@@ -1,0 +1,15 @@
+# use of PyQt/PySide for interface 
+# in terminal type in:
+# -> pip install PyQt5
+# -> pip install opencv-python-headless pillow
+# 'opencv-python-headless' is used for image processing tasks.
+
+
+
+# To run the color_analysis_app.py 
+# Option 1. If you are using VScode press the run button on the top right corner
+# Note: Make sure you click on the 'Run Python File' 
+
+# Option 2. Open a terminal, navigate to the directory where color_analysis_app.py is located
+# -> python color_analysis_app.py
+
