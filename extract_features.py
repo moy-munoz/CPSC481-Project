@@ -47,12 +47,13 @@ def extract_features(image):
     skin_median_B = int(np.median(skin_region_B))
 
     # store the median in a tuple
-    rgb_tuple = (skin_median_R, skin_median_G, skin_median_B)
+    rgb_list = [skin_median_R, skin_median_G, skin_median_B]
     # creates the hexadecimal for the RGB values
-    hex_color = "#{0:02x}{1:02x}{2:02x}".format(skin_median_R, skin_median_G, skin_median_B)
+    # hex_color = "#{0:02x}{1:02x}{2:02x}".format(skin_median_R, skin_median_G, skin_median_B)
 
     # returns a map: rgb_tuple is the key and hex_color is the value
-    return {rgb_tuple: hex_color}
+    # return {rgb_tuple: hex_color}
+    return rgb_list
 
 
 
@@ -61,14 +62,12 @@ def format_csv(extract_features_list):
     # opens and writes to a csv file
     with open(file_path, mode='w', newline='') as f:
         # write header based on the rgb tuple and the hex_color
-        f.write("R,G,B,hex_color\n")
+        f.write("R,G,B\n")
 
         # accesses the list of maps 
         for i in extract_features_list:
             # gathers the items from the map and writes them to the csv file
-            for rgb, hex in i.items():
-                r, g, b = rgb
-                f.write(f"{r},{g},{b},{hex}\n") 
+            f.write(f"{i[0]},{i[1]},{i[2]}\n") 
 
     print("CSV created")
 
