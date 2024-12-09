@@ -4,7 +4,7 @@ import os
 
 
 def read_files():
-    path = "/home/jasmine/Desktop/skin_types"
+    path = "/home/jasmine/Desktop/skin_types/output_dir_"
 
     skin_median = []
 
@@ -48,11 +48,8 @@ def extract_features(image):
 
     # store the median in a tuple
     rgb_list = [skin_median_R, skin_median_G, skin_median_B]
-    # creates the hexadecimal for the RGB values
-    # hex_color = "#{0:02x}{1:02x}{2:02x}".format(skin_median_R, skin_median_G, skin_median_B)
 
-    # returns a map: rgb_tuple is the key and hex_color is the value
-    # return {rgb_tuple: hex_color}
+    # returns a list type
     return rgb_list
 
 
@@ -72,6 +69,6 @@ def format_csv(extract_features_list):
     print("CSV created")
 
 
-read_files()
+# read_files()
 
 cv2.waitKey(0)

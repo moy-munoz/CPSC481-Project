@@ -11,6 +11,7 @@ from sklearn.cluster import KMeans
 from extract_features import extract_features
 import joblib
 from sklearn import datasets
+from preprocessing import preprocesed_image
 
 class ColorAnalysisApp(QMainWindow):
     def __init__(self):
@@ -18,7 +19,6 @@ class ColorAnalysisApp(QMainWindow):
         self.setWindowTitle("Skin Color Analysis App")
         self.setGeometry(100, 100, 800, 600)
         self.model = joblib.load("/home/jasmine/Desktop/AI_Project_Skin/CPSC481-Project/decision.joblib")
-        print(f"Model type: {type(self.model)}")
         self.init_ui()
 
     def init_ui(self):
@@ -62,19 +62,17 @@ class ColorAnalysisApp(QMainWindow):
 
     def process_image(self, file_path):
         image = cv2.imread(file_path)
-        skin_map = extract_features(image)
+        resized_image = preprocesed_image(image, file_path)
+
+        skin_map = extract_features(resized_image)
+        
         if skin_map:
-
             rgb_tuple = skin_map
-
             detected_colors = []
 
-            print(f"Detected RGB: {rgb_tuple}")
             input_data = [list(rgb_tuple)]
 
             prediction = self.model.predict(input_data)[0]
-            print(f"Prediction: {prediction}")
-
 
             # Store the results
             detected_colors.append({
@@ -82,7 +80,6 @@ class ColorAnalysisApp(QMainWindow):
                 "prediction": prediction
             })
             return detected_colors
-        print(skin_map)
 
     def display_colors(self, colors):
         self.colors_list.clear()  # Clear previous results
@@ -91,20 +88,20 @@ class ColorAnalysisApp(QMainWindow):
             self.colors_list.addItem(colors[0])
             return
 
-        for item in colors:
-            try:
-                # Extract details
-                hex_color = item["hex_color"]
-                prediction = item["prediction"]
+        try:
+            # Extract details
+            rgb_tuple = colors[0]["rgb_tuple"]
+            prediction = colors[0]["prediction"]
+            hex_color = "#{:02x}{:02x}{:02x}".format(rgb_tuple[0], rgb_tuple[1], rgb_tuple[2])
 
-                # Create a list item with the prediction and color
-                list_item = QListWidgetItem(f"{prediction} ({hex_color})")
-                list_item.setBackground(QColor(hex_color))
-                list_item.setForeground(Qt.white if QColor(hex_color).lightness() < 128 else Qt.black)
-                self.colors_list.addItem(list_item)
+            # Create a list item with the prediction and color
+            list_item = QListWidgetItem(f"Your skin type is: {prediction}\nYour skin color in hexadecimal is: {hex_color}")
+            list_item.setBackground(QColor(hex_color))
+            list_item.setForeground(Qt.white if QColor(hex_color).lightness() < 128 else Qt.black)
+            self.colors_list.addItem(list_item)
 
-            except Exception as e:
-                self.colors_list.addItem(f"Error displaying color: {str(e)}")
+        except Exception as e:
+            self.colors_list.addItem(f"Error displaying color: {str(e)}")
 
 
 if __name__ == "__main__":

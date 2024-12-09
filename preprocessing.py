@@ -27,33 +27,26 @@ def preprocesed_image(image, image_path):
 
     return new_size
 
-
 def preprocess_and_save_images():
-    # path and seaonal_labels are used for location 
-    path = "/home/jasmine/Desktop/CPSC_481/unlabeled_images"
+    # path for personal image location 
+    path = "/home/jasmine/Desktop/skin_types"
 
-    seasonal_labels = ['Light_Summer', 'True_Summer', 'Light_Spring', 'Vivid_Spring', 
-                    'True_Winter', 'True_Autumn', 'Dark_Autumn', 'Vivid_Winter', 
-                    'Dark_Winter', 'True_Spring', 'Soft_Autumn', 'Soft_Summer']
+    for file in os.listdir(path):
+        # reads the image as a file
+        image = cv.imread(os.path.join(path, file))
+        # skips the image that could not be read properly
+        if image is None:
+            continue    
+        # the function (preprocesed_image) gets called 
+        image = preprocesed_image(image, os.path.join(path, file))
+        # initializes the new folder path
+        output_path = os.path.join(path, "output_dir_")
+        # if the folder(output_dir_) does not exist, then it gets created
+        if not os.path.exists(output_path):
+            os.makedirs(output_path)
+        # writes the image to a new folder path
+        cv.imwrite(os.path.join(output_path, file), image)
 
-    for i in seasonal_labels: 
-        for j in os.listdir(os.path.join(path, i)):
-            # loops through the different image files
-            image_path = os.path.join(path, i, j)
-            image = cv.imread(image_path)
-            # skips the image that could not be read properly
-            if image is None:
-                continue    
-            # the function (preprocesed_image) gets called 
-            image = preprocesed_image(image, image_path)
-            # initializes the new folder path
-            output_path = os.path.join(path, "output_dir_", i)
-            # if the file does not exist, then it gets created
-            if not os.path.exists(output_path):
-                os.makedirs(output_path)
-            # writes the image to a new folder path
-            cv.imwrite(os.path.join(output_path, j), image)
-
-preprocess_and_save_images()
+# preprocess_and_save_images()
 
 cv.waitKey(0)
